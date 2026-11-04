@@ -129,6 +129,8 @@ if that desktop app is up and running.
   again**. If the saved file is moved, deleted or edited, the card offers
   **Download** again. A card that opens in the optional File viewer instead
   has its own download button, which saves another copy each time.
+- **Images.** An image in a message or the viewer that can’t load shows
+  "Couldn't load image" and **Retry**; small images show a round Retry button.
 - **Chats** are **Ongoing** or **Temporary**, which archive after a while
   without messages. The model picker beside Send changes the model for that
   chat. Sharing a chat with a channel shares its whole history.
