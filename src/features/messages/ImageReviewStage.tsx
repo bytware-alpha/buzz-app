@@ -90,7 +90,16 @@ export function ImageReviewStage({
   );
   const selected = attachments[selectedIndex] ?? attachments[0];
   const source = selected ? media(selected.url) : undefined;
-  const load = useImageLoad(source);
+  // Pixels this view already shows outlast another view's failed request, as
+  // in the row; this view's own failure still shows. Navigation, back to the
+  // same source too, starts over.
+  const [loaded, setLoaded] = useState<{
+    source: string | undefined;
+    ready?: true;
+  }>({ source });
+  if (loaded.source !== source) setLoaded({ source });
+  const shared = useImageLoad(source);
+  const load = loaded.source === source && loaded.ready ? undefined : shared;
   // Only a loaded original can be zoomed, copied, downloaded or opened. Its
   // actions stay in place, disabled, so the toolbar never shifts under a press.
   const pixels = load ? undefined : source;
@@ -369,6 +378,7 @@ export function ImageReviewStage({
               current
                 ? () => {
                     constrain();
+                    setLoaded({ source: itemSource, ready: true });
                     imageLoaded(itemSource);
                   }
                 : undefined
@@ -376,6 +386,7 @@ export function ImageReviewStage({
             onError={
               current
                 ? () => {
+                    setLoaded({ source: itemSource });
                     imageFailed(itemSource);
                     onImageError?.(itemSource);
                   }
