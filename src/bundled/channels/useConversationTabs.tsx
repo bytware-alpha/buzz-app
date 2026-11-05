@@ -123,7 +123,7 @@ export function useConversationTabs({
   continuingVisit: boolean;
   navigationSignal?: AbortSignal | undefined;
   isLive(): boolean;
-  openLink(url: string): boolean;
+  openLink(url: string, returnFocus?: HTMLElement): boolean;
   /** Opens a panel as a dialog on the view its link was in, when its
    * placement says so; false when it opens as a tab instead. */
   openInView?:
@@ -711,7 +711,7 @@ export function useConversationTabs({
           (item) => item.id === parsed.channelId && item.channelType === "solo",
         )
     )
-      return openLink(url);
+      return openLink(url, origin?.returnFocus);
     const next = panelOpening(panels, channelId, url, origin?.rootId);
     if (
       next &&
@@ -721,13 +721,14 @@ export function useConversationTabs({
       return true;
     if (next) {
       panelTrigger.current =
-        document.activeElement instanceof HTMLElement
+        origin?.returnFocus ??
+        (document.activeElement instanceof HTMLElement
           ? document.activeElement
-          : null;
+          : null);
       open(next, true);
       return true;
     }
-    return openLink(url);
+    return openLink(url, origin?.returnFocus);
   };
 
   const nodes = useTabNodes(
