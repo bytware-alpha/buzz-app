@@ -234,7 +234,9 @@ export function InboxPage({
             />
             <div className={styles.notice} role="status">
               <p className="text-body text-subtle">
-                {connection.status === "connecting"
+                {/* A connection retrying by itself is still connecting; the
+                    app's one notice reports it, with no raw error here. */}
+                {connection.status === "connecting" || connection.retrying
                   ? "Connecting to your activity…"
                   : connection.denied
                     ? // Its notice, on every page, offers what fixes it.
@@ -242,9 +244,11 @@ export function InboxPage({
                     : (connection.error ??
                       "Choose a community to see your activity.")}
               </p>
-              {connection.status === "error" && !connection.denied && (
-                <Button onClick={relay.tryAgain}>Retry connection</Button>
-              )}
+              {connection.status === "error" &&
+                !connection.denied &&
+                !connection.retrying && (
+                  <Button onClick={relay.tryAgain}>Retry connection</Button>
+                )}
             </div>
           </div>
         )}
