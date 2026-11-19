@@ -174,7 +174,10 @@ test("a failed image in the viewer keeps Retry clear of the toolbar and requests
     async () => {
       const dialog = page.getByRole("dialog", { name: "Image viewer" });
       const stage = dialog.locator("[data-review-stage]");
-      const status = stage.getByRole("status");
+      // The stage also holds the viewer's "Media actions" live region.
+      const status = stage
+        .getByRole("status")
+        .filter({ hasText: /Couldn't load image|Loading image…/ });
       const retry = stage.getByRole("button", { name: /Retry/ });
       for (const [width, height, scale] of [
         [1440, 950, 1],

@@ -100,12 +100,13 @@ test("a viewer Retry keeps focus and its place above the toolbar, and closing re
     const stage = dialog.locator("[data-review-stage]");
     await expect(stage).toBeVisible();
     requests.answer("fail");
-    await expect(stage.getByRole("status")).toHaveText("Couldn't load image");
-    // The row behind the modal keeps its error to itself, so a Retry in the
-    // viewer is announced once.
-    const statuses = page
-      .getByRole("status")
-      .filter({ hasText: /Couldn't load image|Loading image…/ });
+    // The stage also holds the viewer's "Media actions" live region. The row
+    // behind the modal keeps its error to itself, so a Retry in the viewer is
+    // announced once.
+    const image = { hasText: /Couldn't load image|Loading image…/ };
+    const status = stage.getByRole("status").filter(image);
+    const statuses = page.getByRole("status").filter(image);
+    await expect(status).toHaveText("Couldn't load image");
     await expect(statuses).toHaveCount(1);
 
     const retry = stage.getByRole("button", { name: "Retry image" });
@@ -129,7 +130,7 @@ test("a viewer Retry keeps focus and its place above the toolbar, and closing re
     expect(button.y + button.height).toBeLessThanOrEqual(toolbar.y);
 
     requests.answer("fail");
-    await expect(stage.getByRole("status")).toHaveText("Couldn't load image");
+    await expect(status).toHaveText("Couldn't load image");
     await expect(retry).toBeFocused();
     await page.keyboard.press("Escape");
     await expect(dialog).toBeHidden();
