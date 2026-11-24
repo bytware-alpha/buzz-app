@@ -97,6 +97,7 @@ export function routedInline(
 ): ConversationTarget {
   const {
     messageId,
+    messageLink: _link,
     threadRootId: _root,
     context: _context,
     ...rest

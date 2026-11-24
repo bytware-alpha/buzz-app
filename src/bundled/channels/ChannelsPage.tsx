@@ -91,7 +91,10 @@ import {
   ChannelUnarchiveButton,
 } from "./ChannelLifecycleActions";
 import { lifecycleNoun } from "./ChannelLifecycleDialog";
-import type { PageNavigation } from "../../features/navigation/service";
+import {
+  messageLinkOffer,
+  type PageNavigation,
+} from "../../features/navigation/service";
 import type { Navigation } from "../../features/navigation/controller";
 import { targetKey, type OpenTarget } from "../../features/navigation/targets";
 import {
@@ -1766,8 +1769,12 @@ function ChannelWorkspace({
         ),
       ) === "inline"
     ) {
-      if (navigation.resolve(routedInline(routedTarget, routedThread.rootId)))
-        return;
+      const target = routedInline(routedTarget, routedThread.rootId);
+      const offer = messageLinkOffer(navigation);
+      const placed = offer?.available()
+        ? offer.projectInline(target)
+        : navigation.resolve(target);
+      if (placed) return;
     }
     // Each visit is applied once: Back/Forward switch tabs, never close them,
     // and a closed tab is not reopened by a re-render of the same visit. A
@@ -2050,14 +2057,26 @@ function ChannelWorkspace({
     inlineRoot && currentId && !hasThreadTab(currentId, inlineRoot)
       ? inlineRoot
       : undefined;
+  // The inline reader owns this link's acknowledgement while it verifies the
+  // reply and root. The channel timeline cannot settle the visit ahead of it.
+  const inlineLinkNavigation =
+    inlineThread && messageLinkOffer(navigation) ? navigation : undefined;
   // The inline thread's and the layer's openings and closings, as
   // transforms of the visit on screen (inline-address.ts).
+  const dismissInline = (
+    dismissal: NonNullable<ReturnType<typeof inlineDismissal>>,
+  ) => {
+    navigator.dismiss(
+      inlineLinkNavigation ? [inlineLinkNavigation.entryId] : dismissal.visits,
+      dismissal.fallback,
+    );
+  };
   const closeInline = (rootId: string) => {
     const dismissal = inlineDismissal(
       navigator?.snapshot().entry.target,
       rootId,
     );
-    if (dismissal) navigator.dismiss(dismissal.visits, dismissal.fallback);
+    if (dismissal) dismissInline(dismissal);
   };
   const resolveInlineRoot = (from: string, root: string) => {
     const dismissal = canonicalInline(
@@ -2076,7 +2095,7 @@ function ChannelWorkspace({
     if (!dismissal || target?.kind !== "conversation") return;
     tabState.leaveVisit();
     tabState.openThreadTab(target.channelId, rootId, rootId, "focus", "side");
-    navigator.dismiss(dismissal.visits, dismissal.fallback);
+    dismissInline(dismissal);
   };
   // A layer (details or a panel) opens over the composer of the view it was
   // opened in; the address names that view, so reload and Back/Forward know
@@ -2802,12 +2821,13 @@ function ChannelWorkspace({
             cached={cached}
             // The composer below mounts TypingIndicator for members of a live channel.
             navigation={
-              !requestedMessage ||
-              exact?.inTimeline ||
-              (contextTarget &&
-                !detailReply &&
-                navigation?.target.kind === "conversation" &&
-                navigation.target.detail)
+              !inlineLinkNavigation &&
+              (!requestedMessage ||
+                exact?.inTimeline ||
+                (contextTarget &&
+                  !detailReply &&
+                  navigation?.target.kind === "conversation" &&
+                  navigation.target.detail))
                 ? navigation
                 : undefined
             }
@@ -2953,6 +2973,7 @@ function ChannelWorkspace({
           channel={current}
           rootId={inlineThread}
           messageId={addressed?.inlineMessage}
+          linkNavigation={inlineLinkNavigation}
           // A layer over the thread grows the thread to fit it.
           tall={
             !!layerTarget &&
