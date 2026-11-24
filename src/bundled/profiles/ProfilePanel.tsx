@@ -27,6 +27,7 @@ import { StatusEditor } from "../../features/user-status/StatusEditor";
 import { useStatusEditor } from "../../features/user-status/useStatusEditor";
 import { useUserStatus } from "../../features/user-status/useUserStatus";
 import { useRecoverableRead } from "../../features/relay/RecoveryNotice";
+import { isConnectivityFailure } from "../../features/relay/recoverable-read";
 import { ProfilePublicMetadata } from "./ProfilePublicMetadata";
 import { ProfileLocalTime } from "../../features/profiles/ProfileLocalTime";
 import { relayOrigin } from "../../features/communities/destination";
@@ -532,6 +533,13 @@ function ProfileDetails({
       },
       (error: unknown) => {
         if (!active) return;
+        // A connectivity failure hides Retry while recovery retries the read;
+        // hand its focus to the stable region first, as success does.
+        if (
+          document.activeElement === retryButton.current &&
+          isConnectivityFailure({ error })
+        )
+          region.current?.focus();
         setFailure(error);
         setStatus("error");
         setRetrying(false);
