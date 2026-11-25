@@ -4255,6 +4255,7 @@ export function createChannelStore(
           [...new Set([transport.viewer, ...channel.members])].sort(),
         ),
         labels: channel.labels,
+        ...(channel.description ? { description: channel.description } : {}),
         creator: transport.viewer,
         createdAt,
         updatedAt: createdAt,
