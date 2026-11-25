@@ -1684,7 +1684,7 @@ export function createUnread({
     if (!closed)
       for (const channel of channels.list().channels) {
         if (
-          channel.huddle ||
+          channel.unlisted ||
           channel.metadataPending ||
           channel.cached ||
           channel.archived ||
@@ -2201,7 +2201,7 @@ export function createUnread({
         .filter((channel) => !channel.cached && viewerMember(channel, viewer))
         .map((channel) => [
           channel.id,
-          `${channel.channelType ?? ""}:${!!channel.huddle}:${!!channel.metadataPending}`,
+          `${channel.channelType ?? ""}:${!!channel.unlisted}:${!!channel.metadataPending}`,
         ]),
     );
   const cachedIds = (list: ReturnType<ChannelQueries["list"]>) =>

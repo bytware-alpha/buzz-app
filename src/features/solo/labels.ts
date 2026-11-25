@@ -56,13 +56,15 @@ export function soloChatLinkName(channel: { id: string; name: string }) {
   return channel.name.trim() || channel.id.slice(0, 8);
 }
 
-/** The authorized Solo inventory; unknown metadata never implies Solo. */
+/** The authorized Solo inventory; unknown metadata never implies Solo. An
+ * unlisted chat belongs to the surface that presents it, not the list. */
 export function eligibleSolo(
   channel: ChannelSummary,
   viewer: string | undefined,
 ) {
   return (
     !channel.archived &&
+    !channel.unlisted &&
     channel.channelType === "solo" &&
     (!channel.readOnly ||
       ownSolo(channel, viewer) ||

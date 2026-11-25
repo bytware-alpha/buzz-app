@@ -62,7 +62,7 @@ const noOperations = () => emptyOperations;
 
 const writableDestination = (item: ChannelSummary) =>
   (item.channelType === "stream" || item.channelType === "forum") &&
-  !item.huddle &&
+  !item.unlisted &&
   !item.metadataPending &&
   !item.pending &&
   !item.cached &&
