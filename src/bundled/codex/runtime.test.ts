@@ -82,7 +82,8 @@ vi.mock("../../features/agents/mcp-servers", async (importOriginal) => ({
   ...(await importOriginal<
     typeof import("../../features/agents/mcp-servers")
   >()),
-  mcpValues: async () => ({ BUZZMCP_DOCS_TOKEN: "t0ken" }),
+  // The value of `docs`'s TOKEN, in slot 00…01.
+  mcpValues: async () => ({ BUZZMCP_0000000000000001_544F4B454E: "t0ken" }),
 }));
 /** What the gateway's own route module reports, where a test sets it. */
 const liveRoutes = vi.hoisted(() => ({
@@ -2208,6 +2209,7 @@ it("gives a protected agent none of the user's servers and none of its own, on s
         {
           name: "docs",
           enabled: true,
+          slot: "0000000000000001",
           transport: "http",
           url: "https://docs.test/mcp",
           headers: [],
@@ -2219,15 +2221,15 @@ it("gives a protected agent none of the user's servers and none of its own, on s
   const turn = (text: string) => ({
     ...f.delivery(text),
     agent: handle,
-    config: { ...f.agent.config, mcpServers },
+    config: { ...(f.agent.config as object), mcpServers },
   });
   const only = { "company.tools": { command: "secret-tool", enabled: false } };
   const servers = (method: string) =>
     (
-      f.worker.sent.filter((wire) => wire.method === method).at(-1)?.params as {
-        config: { mcp_servers: Record<string, unknown> };
-      }
-    ).config.mcp_servers;
+      f.worker.sent.filter((wire) => wire.method === method).at(-1)?.params as
+        | { config: { mcp_servers: Record<string, unknown> } }
+        | undefined
+    )?.config.mcp_servers;
   await f.runtime.run(turn("@Codex first"));
   await vi.waitFor(() => expect(f.worker.starts()).toHaveLength(1));
   expect(servers("thread/start")).toMatchObject(only);
@@ -3159,6 +3161,8 @@ it.each([
   },
 );
 it("starts and resumes a thread with the owner's signed MCP servers through the saved settings", async () => {
+  // Where a device records the lists it accepted.
+  vi.stubGlobal("localStorage", memoryStorage());
   const f = fixture();
   const mcpServers = signed(
     ownerKey,
@@ -3167,6 +3171,7 @@ it("starts and resumes a thread with the owner's signed MCP servers through the 
         {
           name: "docs",
           enabled: true,
+          slot: "0000000000000001",
           transport: "http",
           url: "https://docs.test/mcp",
           headers: ["TOKEN"],
@@ -3174,6 +3179,7 @@ it("starts and resumes a thread with the owner's signed MCP servers through the 
         {
           name: "idle",
           enabled: false,
+          slot: "0000000000000002",
           transport: "stdio",
           command: "idle",
           args: [],
@@ -3185,7 +3191,7 @@ it("starts and resumes a thread with the owner's signed MCP servers through the 
   );
   const turn = (text: string) => {
     const d = f.delivery(text);
-    return { ...d, config: { ...d.config, mcpServers } };
+    return { ...d, config: { ...(d.config as object), mcpServers } };
   };
   const expected = {
     "company.tools": { command: "secret-tool", enabled: false },
