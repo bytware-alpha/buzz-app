@@ -506,6 +506,9 @@ html[data-keyboard-navigation] .authorLink:focus-visible {
 .reactionGlyph .reactionNativeEmoji {
   padding: var(--space-half);
 }
+.reactionNativeEmoji[data-reaction-artwork] {
+  filter: var(--shadow-reaction-emoji);
+}
 .reactionCustomEmoji {
   display: block;
   width: 0.75rem;

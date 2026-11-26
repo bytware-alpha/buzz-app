@@ -887,6 +887,7 @@
     0 2px 4px rgba(0, 0, 0, 0.04);
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-sm: 0 0 2px rgba(0, 0, 0, 0.1), 0 4px 8px -2px rgba(0, 0, 0, 0.06);
+  --shadow-reaction-emoji: none;
 
   /* --- Space. Six steps extracted from the Messages frame. --
      The scale is intentionally short: 4/8/12/16/20/24 covers the repeated
@@ -1326,6 +1327,8 @@
   --text-mention-own: var(--text-mention);
   --shadow-card: 0 0 0 1px rgba(255, 255, 255, 0.08);
   --shadow-panel: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  /* Native emoji such as ➕ are dark grey and vanish on the dark reaction fill. */
+  --shadow-reaction-emoji: drop-shadow(0 0 1px rgb(255 255 255 / 60%));
   --surface-base: var(--neutral-1);
   --surface-panel: var(--neutral-3);
   --surface-composer: var(--neutral-4);
