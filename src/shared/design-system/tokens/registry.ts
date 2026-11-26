@@ -474,7 +474,7 @@ export const ROLE_GROUPS: RoleGroup[] = [
       {
         token: "--affordance-reaction",
         variable: "--affordance-reaction",
-        pointsAt: "black 6% light / black 6% dark",
+        pointsAt: "black 6% light / black 30% dark",
         use: "Reaction strip on received bubbles and the panel; the add-reaction hover lays it again on top. Dark mode darkens too, so Apple's grey symbol emoji stay visible.",
         status: "core",
       },
@@ -1028,13 +1028,6 @@ export const ROLE_GROUPS: RoleGroup[] = [
         variable: "--border-standard",
         pointsAt: "neutral-3 light / neutral-5 dark",
         use: "A quiet separator or panel edge.",
-        status: "core",
-      },
-      {
-        token: "border-reaction",
-        variable: "--border-reaction",
-        pointsAt: "none light / surface-panel dark",
-        use: "Ring around a reaction pill, so the dark mode fill stays separate from its bubble.",
         status: "core",
       },
 

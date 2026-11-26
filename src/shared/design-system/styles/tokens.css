@@ -831,6 +831,8 @@
   /* A reaction strip sits between a bubble and its chips, and a whole bubble
      under the pointer takes the quietest overlay of all. */
   --shade-soft-fill: rgb(0 0 0 / 6%);
+  /* Sinks a dark mode reaction pill below its bubble. */
+  --shade-deep-fill: rgb(0 0 0 / 30%);
   --tint-soft-fill: rgb(255 255 255 / 10%);
   --shade-quiet-fill: rgb(0 0 0 / 4%);
   --tint-quiet-fill: rgb(255 255 255 / 8%);
@@ -1313,9 +1315,8 @@
   --affordance-message-highlight: var(--tint-fill);
   --affordance-message-own-highlight: var(--affordance-message-highlight);
   /* Grey symbol emoji such as ➕ vanish on a lightened fill. */
-  --affordance-reaction: var(--shade-soft-fill);
+  --affordance-reaction: var(--shade-deep-fill);
   --affordance-reaction-own: var(--affordance-reaction);
-  --border-reaction: var(--surface-panel);
   --affordance-agent-preview: var(--tint-soft-fill);
   /* Ordinary mentions tint the dark fill they sit on. A mention of you takes
      the strong fill in both modes, because it asks for your attention. */
@@ -2192,7 +2193,6 @@
   --text-color-accent: var(--text-accent);
   --border-color-standard: var(--border-standard);
   --border-color-message-thread: var(--border-message-thread);
-  --border-color-reaction: var(--border-reaction);
   --border-color-prominent: var(--border-prominent);
   --border-color-floating-control: var(--border-floating-control);
   --border-color-focus: var(--border-focus);
