@@ -479,6 +479,13 @@ export const ROLE_GROUPS: RoleGroup[] = [
         status: "core",
       },
       {
+        token: "--affordance-agent-preview",
+        variable: "--affordance-agent-preview",
+        pointsAt: "black 6% light / white 10% dark",
+        use: "Compact agent activity bubble.",
+        status: "core",
+      },
+      {
         token: "--affordance-reaction-own",
         variable: "--affordance-reaction-own",
         pointsAt:

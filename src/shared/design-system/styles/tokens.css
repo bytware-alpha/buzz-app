@@ -1143,6 +1143,7 @@
   --affordance-message-own-highlight: var(--affordance-message-highlight);
   --affordance-reaction: var(--shade-soft-fill);
   --affordance-reaction-own: var(--affordance-reaction);
+  --affordance-agent-preview: var(--shade-soft-fill);
   /* Mentions are people, not links. Ordinary mentions stay neutral; a mention
      of you joins the strong group, because it asks for your attention. Own
      bubbles may override the -own trio to stay distinct from their fill. */
@@ -1315,6 +1316,7 @@
   --affordance-reaction: var(--shade-soft-fill);
   --affordance-reaction-own: var(--affordance-reaction);
   --border-reaction: var(--surface-panel);
+  --affordance-agent-preview: var(--tint-soft-fill);
   /* Ordinary mentions tint the dark fill they sit on. A mention of you takes
      the strong fill in both modes, because it asks for your attention. */
   --affordance-mention: var(--tint-fill);
