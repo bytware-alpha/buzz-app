@@ -427,6 +427,11 @@ html[data-keyboard-navigation] .authorLink:focus-visible {
 .reactionItem[data-mine] {
   background: var(--reaction-self-surface, var(--affordance-reaction-self));
 }
+.reactionItem:not([data-mine]),
+.inlineReactionTool,
+.reactionFallback > [data-reaction] {
+  box-shadow: 0 0 0 1px var(--border-reaction, transparent);
+}
 /* Forced colors replace the tint, so a system-color ring keeps it marked. */
 @media (forced-colors: active) {
   .reactionItem[data-mine] {
@@ -505,9 +510,6 @@ html[data-keyboard-navigation] .authorLink:focus-visible {
    of truncation while retaining bounded labels for long reaction content. */
 .reactionGlyph .reactionNativeEmoji {
   padding: var(--space-half);
-}
-.reactionNativeEmoji[data-reaction-artwork] {
-  filter: var(--shadow-reaction-emoji);
 }
 .reactionCustomEmoji {
   display: block;
